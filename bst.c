@@ -47,12 +47,80 @@ bstNode* getLargestNode(bstNode *root)
 	return current;
 } 
 
-void inorderBst(bstNode *root)
+
+int heightOfBst(bstNode* root)
+{
+	if(root==NULL)
+		return 0;
+
+	int left=heightOfBst(root->left);
+	int right=heightOfBst(root->right);
+
+	return left>right?left+1:right+1;
+}
+
+/*BST Depth First Search Traversal*/
+/*Pre Order*/
+void preOrderBst(bstNode *root) 
+{
+	if(root != NULL) {
+		printf("%d ", root->key);
+		preOrderBst(root->left);
+		preOrderBst(root->right);
+	}
+
+	return;
+}
+
+/*Post Order*/
+void postOrderBst(bstNode *root) 
+{
+	if(root != NULL){
+		postOrderBst(root->left);
+		postOrderBst(root->right);
+		printf("%d ", root->key);
+	}
+
+	return;
+}
+
+/*In Order*/
+void inOrderBst(bstNode *root)
 {
 	if (root != NULL) {
-		inorderBst(root->left);
-		printf("%d \n", root->key);
-		inorderBst(root->right);
+		inOrderBst(root->left);
+		printf("%d ", root->key);
+		inOrderBst(root->right);
+	}
+
+	return;
+}
+
+
+/*BST Breath First Search Traversal (Level Order Traversal)*/
+static void print_level(bstNode *root, int level, int id)
+{
+	if(!root)
+		return;
+
+	if(level == id)
+		printf("%d ", root->key);
+
+	print_level(root->left, level, id+1);
+	print_level(root->right, level, id+1);
+}
+
+
+void levelOrderBst(bstNode * root)
+{
+	int level=0;
+	if(!root)
+		return;
+
+	/* get the height of the tree first */
+	int h = heightOfBst(root);
+	for(level=1; level<=h; level++) {
+		print_level(root, level, 1);
 	}
 }
 
@@ -175,17 +243,37 @@ int main()
 	root = insertIntoBst(root, 60);
 	root = insertIntoBst(root, 80);
 
-	/* print inoder traversal of the BST */
-	inorderBst(root);
-	printf("\nIs BST : %s\n", checkBST(root)?"TRUE":"FALSE" );
+	printf("\n\nSample BST:\n");
+	printf("\n     %d", 50);
+	printf("\n    %c  %c", '/', '|');
+	printf("\n  %d     %d", 30, 70);
+	printf("\n %c  %c   %c  %c", '/', '|', '/', '|');
+	printf("\n%d  %d %d   %d", 20, 40, 60, 80);
+
+	printf("\n\nIs BST : %s", checkBST(root)?"TRUE":"FALSE" );
+	printf("\nHeight of BST is: %d", heightOfBst(root));
+
+	printf("\n\nDepth First Traversal:");
+	/* print BST */
+	printf("\n1: Pre-Order:\n");
+	preOrderBst(root);
+
+	printf("\n\n2: Post-Order:\n");
+	postOrderBst(root);
+
+	printf("\n\n3: In-Order:\n");
+	inOrderBst(root);
+
+	printf("\n\nBreath First Traversal:\n");
+	levelOrderBst(root);
 
 	/* delete node from BST*/
-	printf("\nDeleting: 50\n");
+	printf("\n\nDeleting: 50\n");
 	root = deleteNodeFromBst(root, 50);
 
 	/* print inoder traversal of the BST */
-	inorderBst(root);
+	inOrderBst(root);
 
-	printf("\nIs BST : %s\n", checkBST(root)?"TRUE":"FALSE" );
+	printf("\n\nIs BST : %s\n", checkBST(root)?"TRUE":"FALSE" );
 	return 0;
 }
