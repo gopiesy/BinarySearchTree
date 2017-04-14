@@ -201,18 +201,9 @@ bstNode* deleteNodeFromBst(bstNode* root, int key)
 }
 
 static bstNode *prev=NULL;
-bool checkBST(bstNode* root) 
-{
-	prev=NULL;
-	return check_bst(root);
-}
-
 static bool check_bst(bstNode* root)
 {
-
-	if(!root)
-		return true;
-	else {
+	if(root) {
 		if(!check_bst(root->left))
 			return false;
 
@@ -224,6 +215,30 @@ static bool check_bst(bstNode* root)
 	}
 	return true;
 }
+
+bool checkBST(bstNode* root) 
+{
+	prev=NULL;
+	return check_bst(root);
+}
+
+bstNode* lowestCommonAncestorOfBstNode(bstNode * root, int v1,int v2)
+{
+	if (!root)
+		return NULL;
+
+	if (root->key == v1 || root->key == v2)
+		return root;
+
+	bstNode *left_lca  = lowestCommonAncestorOfBstNode(root->left, v1, v2);
+	bstNode *right_lca = lowestCommonAncestorOfBstNode(root->right, v1, v2);
+
+	if (left_lca && right_lca)
+		return root;
+
+	return (left_lca != NULL)? left_lca: right_lca;
+}
+
 
 int main()
 {
@@ -275,5 +290,10 @@ int main()
 	inOrderBst(root);
 
 	printf("\n\nIs BST : %s\n", checkBST(root)?"TRUE":"FALSE" );
+
+	bstNode* tmp = lowestCommonAncestorOfBstNode(root, 30, 80);
+	if(tmp)
+		printf("\nLowest Comomn Ancestor of 30 and 80 in BST is: %d\n", tmp->key );
+	
 	return 0;
 }
